@@ -20,7 +20,7 @@ struct Transition
 struct Nfa
 {
     int num_states = 0; 
-    std::vector<Transition> transition; 
+    std::vector<Transition> transitions; 
     int start_sate = -1; 
     int accept_state = -1; 
 
