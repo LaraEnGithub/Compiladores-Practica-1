@@ -13,21 +13,7 @@ compilers_lab/regex_to_nfa/
 
 ## Uso
 
-```
--r              lee una regex de stdin, imprime su forma postfija con concatenación explícita
--t              lee una regex y luego cadenas (una por línea) de stdin, imprime 1/0 por cadena
--o <archivo>    lee una regex de stdin, serializa el NFA resultante en <archivo>
-```
-
-Ejemplo:
-
-```bash
-echo "(ab)*" | ./regex_to_nfa -r
-# ab.*
-
-printf '%s\n' "(ab)*" "ab" "aba" "abab" | ./regex_to_nfa -t
-# 1101
-```
+...
 
 ## Compilar y correr localmente
 
