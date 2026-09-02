@@ -53,7 +53,19 @@ Fragment build_concat(Nfa &n, Fragment a, Fragment b)
     return {a.start, b.accept};
 }
 
+Fragment build_union(Nfa &n, Fragment a, Fragment b)
+{
+    int s = n.add_state();
+    int acc = n.add_state();
+    n.transitions.push_back({s, a.start, EPSILON});
+    n.transitions.push_back({s, b.start, EPSILON});
+    n.transitions.push_back({a.accept, acc, EPSILON});
+    n.transitions.push_back({b.accept, acc, EPSILON});
+    return {s, acc};
 }
+
+}
+
 
 
 Nfa regex_to_nfa(const Regex &r)
@@ -69,6 +81,11 @@ Nfa regex_to_nfa(const Regex &r)
             Fragment b = stack.top(); stack.pop();
             Fragment a = stack.top(); stack.pop();
             stack.push(build_concat(n, a, b));
+        }
+        else if (c == '|'){
+            Fragment b = stack.top(); stack.pop();
+            Fragment a = stack.top(); stack.pop();
+            stack.push(build_union(n, a, b));
         }
         else
         {
