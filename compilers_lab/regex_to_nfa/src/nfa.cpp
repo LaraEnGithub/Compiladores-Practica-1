@@ -83,6 +83,16 @@ Fragment build_plus(Nfa &n, Fragment a)
     return {a.start, acc};
 }
 
+Fragment build_optional(Nfa &n, Fragment a)
+{
+    int s = n.add_state();
+    int acc = n.add_state();
+    n.transitions.push_back({s, a.start, EPSILON});
+    n.transitions.push_back({s, acc, EPSILON});
+    n.transitions.push_back({a.accept, acc, EPSILON});
+    return {s, acc};
+}
+
 }
 
 
@@ -115,6 +125,11 @@ Nfa regex_to_nfa(const Regex &r)
         {
             Fragment a = stack.top(); stack.pop();
             stack.push(build_plus(n, a));
+        }
+        else if (c == '?')
+        {
+            Fragment a = stack.top(); stack.pop();
+            stack.push(build_optional(n, a));
         }
         else
         {
