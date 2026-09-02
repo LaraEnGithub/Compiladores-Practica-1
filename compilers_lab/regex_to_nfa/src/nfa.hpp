@@ -21,7 +21,7 @@ struct Nfa
 {
     int num_states = 0; 
     std::vector<Transition> transitions; 
-    int start_sate = -1; 
+    int start_state = -1; 
     int accept_state = -1; 
 
     int add_state(); 

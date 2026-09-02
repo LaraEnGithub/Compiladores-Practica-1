@@ -1,14 +1,8 @@
 #include "nfa.hpp"
-
+#include <stack>
 #include <iostream>
 
-Nfa regex_to_nfa(const Regex &r)
-{
-    (void)r;
-    std::cout << "regex_to_nfa\n";
 
-    return Nfa{};
-}
 
 bool match_nfa(const Nfa &n, const std::string &input)
 {
@@ -52,4 +46,38 @@ Fragment build_literal(Nfa &n, char c)
     n.transitions.push_back({s, a, c});
     return {s, a};
 }
-} 
+
+Fragment build_concat(Nfa &n, Fragment a, Fragment b)
+{
+    n.transitions.push_back({a.accept, b.start, EPSILON});
+    return {a.start, b.accept};
+}
+
+}
+
+
+Nfa regex_to_nfa(const Regex &r)
+{
+    Nfa n;
+    std::stack<Fragment> stack;
+
+    for (const auto &token : r.items)
+    {
+        char c = token.value;
+        if (c == '.')
+        {
+            Fragment b = stack.top(); stack.pop();
+            Fragment a = stack.top(); stack.pop();
+            stack.push(build_concat(n, a, b));
+        }
+        else
+        {
+            stack.push(build_literal(n, c));
+        }
+    }
+
+    Fragment result = stack.top();
+    n.start_state = result.start;
+    n.accept_state = result.accept;
+    return n;
+}
