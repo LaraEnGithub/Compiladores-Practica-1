@@ -64,6 +64,17 @@ Fragment build_union(Nfa &n, Fragment a, Fragment b)
     return {s, acc};
 }
 
+Fragment build_stark(Nfa &n, Fragment a)
+{
+    int s = n.add_state();
+    int acc = n.add_state();
+    n.transitions.push_back({s, a.start, EPSILON});
+    n.transitions.push_back({s, acc, EPSILON});
+    n.transitions.push_back({a.accept, a.start, EPSILON});
+    n.transitions.push_back({a.accept, acc, EPSILON});
+    return {s, acc};
+}
+
 }
 
 
@@ -86,6 +97,11 @@ Nfa regex_to_nfa(const Regex &r)
             Fragment b = stack.top(); stack.pop();
             Fragment a = stack.top(); stack.pop();
             stack.push(build_union(n, a, b));
+        }
+        else if (c == '*')
+        {
+            Fragment a = stack.top(); stack.pop();
+            stack.push(build_stark(n, a));
         }
         else
         {
