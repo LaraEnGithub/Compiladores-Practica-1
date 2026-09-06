@@ -34,14 +34,17 @@ bool save_nfa(const Nfa &n, const std::string &path)
 {
     (void)n;
     (void)path;
-    // std::cout << "save_nfa\n";
     return true;
 }
 
 void free_nfa(Nfa &n)
 {
     (void)n;
-    std::cout << "free_nfa\n";
+    n.states.clear();
+    n.num_states = 0;
+    n.start_state = -1;
+    n.accept_state = -1;
+
 }
 
 void epsilon_closure(const Nfa &n, std::set<int> &states)
