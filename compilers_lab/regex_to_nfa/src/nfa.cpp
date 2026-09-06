@@ -5,10 +5,29 @@
 
 bool match_nfa(const Nfa &n, const std::string &input)
 {
-    (void)n;
-    (void)input;
-    std::cout << "match_nfa\n";
-    return false;
+    std::set<int> visited_states;
+    
+    visited_states.insert(n.start_state);
+    epsilon_closure(n, visited_states);
+
+    for(char c : input){
+        std::set<int> new_states;
+    
+        for(int s : visited_states) {
+            for(const auto &t : n.states[s].transitions){
+                if (t.symbol == c)
+                    new_states.insert(t.to);
+            }
+        }
+
+        if(new_states.empty())
+            return false;
+        
+        visited_states = new_states;
+        epsilon_closure(n, visited_states);
+    }
+
+    return visited_states.find(n.accept_state) != visited_states.end();
 }
 
 bool save_nfa(const Nfa &n, const std::string &path)
@@ -25,7 +44,8 @@ void free_nfa(Nfa &n)
     std::cout << "free_nfa\n";
 }
 
-void epsilon_closure(const Nfa &n, std::set<int> &states){
+void epsilon_closure(const Nfa &n, std::set<int> &states)
+{
     std::stack<int> s; 
     
     for(int state : states) s.push(state);
