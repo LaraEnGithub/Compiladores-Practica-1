@@ -31,6 +31,10 @@ int Nfa::add_state()
     return num_states++; 
 }
 
+void Nfa::add_transition(int from, int to, char c){
+    states[from].transitions.push_back({to,c});
+}
+
 namespace
 {
 struct Fragment
@@ -43,13 +47,13 @@ Fragment build_literal(Nfa &n, char c)
 {
     int s = n.add_state();
     int a = n.add_state();
-    n.transitions.push_back({s, a, c});
+    n.add_transition(s, a, c);
     return {s, a};
 }
 
 Fragment build_concat(Nfa &n, Fragment a, Fragment b)
 {
-    n.transitions.push_back({a.accept, b.start, EPSILON});
+    n.add_transition(a.accept, b.start, EPSILON);
     return {a.start, b.accept};
 }
 
@@ -57,10 +61,10 @@ Fragment build_union(Nfa &n, Fragment a, Fragment b)
 {
     int s = n.add_state();
     int acc = n.add_state();
-    n.transitions.push_back({s, a.start, EPSILON});
-    n.transitions.push_back({s, b.start, EPSILON});
-    n.transitions.push_back({a.accept, acc, EPSILON});
-    n.transitions.push_back({b.accept, acc, EPSILON});
+    n.add_transition(s, a.start, EPSILON);
+    n.add_transition(s, b.start, EPSILON);
+    n.add_transition(a.accept, acc, EPSILON);
+    n.add_transition(b.accept, acc, EPSILON);
     return {s, acc};
 }
 
@@ -68,18 +72,18 @@ Fragment build_stark(Nfa &n, Fragment a)
 {
     int s = n.add_state();
     int acc = n.add_state();
-    n.transitions.push_back({s, a.start, EPSILON});
-    n.transitions.push_back({s, acc, EPSILON});
-    n.transitions.push_back({a.accept, a.start, EPSILON});
-    n.transitions.push_back({a.accept, acc, EPSILON});
+    n.add_transition(s, a.start, EPSILON);
+    n.add_transition(s, acc, EPSILON);
+    n.add_transition(a.accept, a.start, EPSILON);
+    n.add_transition(a.accept, acc, EPSILON);
     return {s, acc};
 }
 
 Fragment build_plus(Nfa &n, Fragment a)
 {
     int acc = n.add_state();
-    n.transitions.push_back({a.accept, a.start, EPSILON});
-    n.transitions.push_back({a.accept, acc, EPSILON});
+    n.add_transition(a.accept, a.start, EPSILON);
+    n.add_transition(a.accept, acc, EPSILON);
     return {a.start, acc};
 }
 
@@ -87,9 +91,9 @@ Fragment build_optional(Nfa &n, Fragment a)
 {
     int s = n.add_state();
     int acc = n.add_state();
-    n.transitions.push_back({s, a.start, EPSILON});
-    n.transitions.push_back({s, acc, EPSILON});
-    n.transitions.push_back({a.accept, acc, EPSILON});
+    n.add_transition(s, a.start, EPSILON);
+    n.add_transition(s, acc, EPSILON);
+    n.add_transition(a.accept, acc, EPSILON);
     return {s, acc};
 }
 

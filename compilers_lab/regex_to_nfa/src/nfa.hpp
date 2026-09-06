@@ -16,15 +16,20 @@ struct Transition
     char symbol; //might be epsilon
 };
 
+struct State
+{
+    std::vector<Transition> transitions;
+};
 
 struct Nfa
 {
     int num_states = 0; 
-    std::vector<Transition> transitions; 
+    std::vector<State> states; 
     int start_state = -1; 
     int accept_state = -1; 
 
     int add_state(); 
+    void add_transition(int from, int to, char c);
 };
 
 
