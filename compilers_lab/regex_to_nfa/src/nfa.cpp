@@ -1,8 +1,7 @@
 #include "nfa.hpp"
 #include <stack>
 #include <iostream>
-
-
+#include <stack>
 
 bool match_nfa(const Nfa &n, const std::string &input)
 {
@@ -16,7 +15,7 @@ bool save_nfa(const Nfa &n, const std::string &path)
 {
     (void)n;
     (void)path;
-    std::cout << "save_nfa\n";
+    // std::cout << "save_nfa\n";
     return true;
 }
 
@@ -26,8 +25,27 @@ void free_nfa(Nfa &n)
     std::cout << "free_nfa\n";
 }
 
+void epsilon_closure(const Nfa &n, std::set<int> &states){
+    std::stack<int> s; 
+    
+    for(int state : states) s.push(state);
+
+    while(!s.empty()){
+        int curr_state = s.top();
+        s.pop();
+
+        for(const Transition &t : n.states[curr_state].transitions) {
+            if(t.symbol == EPSILON && states.find(t.to) == states.end()){
+                states.insert(t.to);
+                s.push(t.to);
+            }
+        }
+    } 
+}
+
 int Nfa::add_state()
-{
+{   
+    states.push_back(State{});
     return num_states++; 
 }
 
@@ -98,8 +116,6 @@ Fragment build_optional(Nfa &n, Fragment a)
 }
 
 }
-
-
 
 Nfa regex_to_nfa(const Regex &r)
 {
