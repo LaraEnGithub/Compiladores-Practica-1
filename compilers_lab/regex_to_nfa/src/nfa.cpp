@@ -14,7 +14,7 @@ bool match_nfa(const Nfa &n, const std::string &input)
         std::set<int> new_states;
     
         for(int s : visited_states) {
-            for(const auto &t : n.states[s].transitions){
+            for(const Transition &t : n.states[s].transitions){
                 if (t.symbol == c)
                     new_states.insert(t.to);
             }
