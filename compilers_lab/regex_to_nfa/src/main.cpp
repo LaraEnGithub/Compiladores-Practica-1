@@ -56,44 +56,81 @@ int serialize_nfa_from_regex(const std::string &regex_str, const std::string &ou
     return 0;
 }
 
+// Modo -l (carga): reconstruye un NFA previamente serializado con -o
+// leyéndolo desde disco, y valida contra él las cadenas que llegan por
+// stdin (una por línea), imprimiendo 1/0 por cada una. A diferencia de
+// -t, no parte de una regex: el autómata ya viene armado en el archivo.
+int load_and_test(const std::string &input_path)
+{
+    Nfa n;
+    if (!load_nfa(input_path, n))
+    {
+        std::cerr << "Error: No se pudo cargar el NFA desde '" << input_path << "'.\n";
+        return 1;
+    }
+
+    std::string line;
+    while (std::getline(std::cin, line))
+    {
+        strip_crlf(line);
+        bool result = match_nfa(n, line);
+        std::cout << (result ? '1' : '0');
+    }
+    std::cout << "\n";
+
+    free_nfa(n);
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     int opt;
     std::string output_file;
+    std::string input_file;
     int mode = 0;
 
-    while ((opt = getopt(argc, argv, "rto:")) != -1)
+    while ((opt = getopt(argc, argv, "rto:l:")) != -1)
     {
         switch (opt)
         {
-            case 'r':
-                if (mode != 0)
-                {
-                    std::cerr << "Error: Solo puedes usar una opcion de modo entre -r, -t o -o.\n";
-                    return 1;
-                }
-                mode = 'r';
-                break;
-            case 't':
-                if (mode != 0)
-                {
-                    std::cerr << "Error: Solo puedes usar una opcion de modo entre -r, -t o -o.\n";
-                    return 1;
-                }
-                mode = 't';
-                break;
-            case 'o':
-                if (mode != 0)
-                {
-                    std::cerr << "Error: Solo puedes usar una opcion de modo entre -r, -t o -o.\n";
-                    return 1;
-                }
-                mode = 'o';
-                output_file = optarg;
-                break;
-            default:
-                std::cerr << "Usage: " << argv[0] << " -r | -t | -o <archivo.nfa>\n";
+        case 'r':
+            if (mode != 0)
+            {
+                std::cerr << "Error: Solo puedes usar una opcion de modo entre -r, -t o -o.\n";
                 return 1;
+            }
+            mode = 'r';
+            break;
+        case 't':
+            if (mode != 0)
+            {
+                std::cerr << "Error: Solo puedes usar una opcion de modo entre -r, -t o -o.\n";
+                return 1;
+            }
+            mode = 't';
+            break;
+        case 'o':
+            if (mode != 0)
+            {
+                std::cerr << "Error: Solo puedes usar una opcion de modo entre -r, -t o -o.\n";
+                return 1;
+            }
+            mode = 'o';
+            output_file = optarg;
+            break;
+        case 'l':
+            if (mode != 0)
+            {
+                std::cerr << "Error: Solo puedes usar una opcion de modo entre -r, -t, -o o -l.\n";
+                return 1;
+            }
+            mode = 'l';
+            input_file = optarg;
+            break;
+
+        default:
+            std::cerr << "Usage: " << argv[0] << " -r | -t | -o <archivo.nfa>\n";
+            return 1;
         }
     }
 
@@ -101,6 +138,12 @@ int main(int argc, char *argv[])
     {
         std::cerr << "Usage: " << argv[0] << " -r | -t | -o <archivo.nfa>\n";
         return 1;
+    }
+
+    // El modo -l carga el NFA desde disco
+    if (mode == 'l')
+    {
+        return load_and_test(input_file);
     }
 
     std::string regex_str;
