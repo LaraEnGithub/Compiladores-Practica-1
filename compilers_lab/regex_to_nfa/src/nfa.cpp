@@ -251,7 +251,7 @@ namespace
         pos = i;
         return std::stol(text.substr(start, i - start));
     }
-} // namespace
+}
 
 bool load_nfa(const std::string &path, Nfa &out)
 {
@@ -280,14 +280,14 @@ bool load_nfa(const std::string &path, Nfa &out)
         return false;
     long accept_state = read_int_after(text, k, pos);
 
-    // Reconstruir estados vacíos
+    // Reconstruimos estados vacíos
     out = Nfa{};
     for (long i = 0; i < num_states; ++i)
         out.add_state();
     out.start_state = static_cast<int>(start_state);
     out.accept_state = static_cast<int>(accept_state);
 
-    // Recorrer las transiciones: cada una es {"from": F, "to": T, "symbol": "S"}
+    // Recorrer las transiciones
     std::size_t tpos = text.find("\"transitions\"");
     if (tpos == std::string::npos)
         return false;

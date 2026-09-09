@@ -58,8 +58,7 @@ int serialize_nfa_from_regex(const std::string &regex_str, const std::string &ou
 
 // Modo -l (carga): reconstruye un NFA previamente serializado con -o
 // leyéndolo desde disco, y valida contra él las cadenas que llegan por
-// stdin (una por línea), imprimiendo 1/0 por cada una. A diferencia de
-// -t, no parte de una regex: el autómata ya viene armado en el archivo.
+// stdin (una por línea), imprimiendo 1/0 por cada una.
 int load_and_test(const std::string &input_path)
 {
     Nfa n;
