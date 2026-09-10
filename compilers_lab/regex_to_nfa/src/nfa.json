@@ -1,0 +1,32 @@
+{
+  "num_states": 20,
+  "start_state": 18,
+  "accept_state": 19,
+  "transitions": [
+    {"from": 0, "to": 1, "symbol": "a"},
+    {"from": 1, "to": 19, "symbol": ""},
+    {"from": 2, "to": 3, "symbol": "b"},
+    {"from": 3, "to": 6, "symbol": ""},
+    {"from": 4, "to": 5, "symbol": "a"},
+    {"from": 5, "to": 4, "symbol": ""},
+    {"from": 5, "to": 7, "symbol": ""},
+    {"from": 6, "to": 4, "symbol": ""},
+    {"from": 6, "to": 7, "symbol": ""},
+    {"from": 7, "to": 8, "symbol": ""},
+    {"from": 8, "to": 9, "symbol": "b"},
+    {"from": 9, "to": 16, "symbol": ""},
+    {"from": 10, "to": 11, "symbol": "a"},
+    {"from": 11, "to": 15, "symbol": ""},
+    {"from": 12, "to": 13, "symbol": "b"},
+    {"from": 13, "to": 15, "symbol": ""},
+    {"from": 14, "to": 10, "symbol": ""},
+    {"from": 14, "to": 12, "symbol": ""},
+    {"from": 15, "to": 14, "symbol": ""},
+    {"from": 15, "to": 17, "symbol": ""},
+    {"from": 16, "to": 14, "symbol": ""},
+    {"from": 16, "to": 17, "symbol": ""},
+    {"from": 17, "to": 19, "symbol": ""},
+    {"from": 18, "to": 0, "symbol": ""},
+    {"from": 18, "to": 2, "symbol": ""}
+  ]
+}
