@@ -128,14 +128,14 @@ int main(int argc, char *argv[])
             break;
 
         default:
-            std::cerr << "Usage: " << argv[0] << " -r | -t | -o <archivo.nfa>\n";
+            std::cerr << "Usage: " << argv[0] << " -r | -t | -o | -l <archivo.nfa>\n";
             return 1;
         }
     }
 
     if (mode == 0)
     {
-        std::cerr << "Usage: " << argv[0] << " -r | -t | -o <archivo.nfa>\n";
+        std::cerr << "Usage: " << argv[0] << " -r | -t | -o | -l  <archivo.nfa>\n";
         return 1;
     }
 
